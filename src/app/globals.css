@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f7f7fb;
+  --surface: #ffffff;
+  --foreground: #1c1c26;
+  --muted: #6b6b7b;
+  --border: #e6e6ee;
+  --accent: #6d5ef2;
+  --accent-foreground: #ffffff;
+  --accent-soft: #efecff;
+  --danger: #e5484d;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #131318;
+    --surface: #1c1c24;
+    --foreground: #efeff4;
+    --muted: #9797a8;
+    --border: #2c2c38;
+    --accent: #8c7dff;
+    --accent-foreground: #131318;
+    --accent-soft: #26223f;
+    --danger: #ff6b6f;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-[var(--border)] bg-[var(--surface)] shadow-sm;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-90;
+  }
+
+  .btn-secondary {
+    @apply bg-[var(--accent-soft)] text-[var(--accent)] hover:opacity-80;
+  }
+
+  .btn-ghost {
+    @apply text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)];
+  }
+
+  .btn-danger {
+    @apply text-[var(--danger)] hover:bg-[var(--danger)]/10;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-[var(--accent)];
+  }
+
+  .label {
+    @apply text-xs font-medium text-[var(--muted)];
+  }
+}

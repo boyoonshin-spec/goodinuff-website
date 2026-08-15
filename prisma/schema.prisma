@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  scheduleItems ScheduleItem[]
+  diaryEntries  DiaryEntry[]
+  kakaoAccount  KakaoAccount?
+}
+
+// A single "일정/할일" item. isTodo distinguishes a checkable to-do
+// from a plain calendar event; both share date/time + reminder fields.
+model ScheduleItem {
+  id           String    @id @default(cuid())
+  userId       String
+  title        String
+  memo         String?
+  date         DateTime // day the item belongs to
+  time         String? // "HH:mm", optional (all-day if empty)
+  isTodo       Boolean   @default(true)
+  completed    Boolean   @default(false)
+  remindKakao  Boolean   @default(false)
+  remindMinutesBefore Int @default(10)
+  reminderSentAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
+
+model DiaryEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  date      DateTime // one entry per day
+  content   String
+  mood      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+}
+
+// Kakao "나에게 보내기" OAuth tokens, one per user.
+model KakaoAccount {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  connectedAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
