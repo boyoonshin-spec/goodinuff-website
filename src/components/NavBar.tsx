@@ -18,7 +18,7 @@ export default function NavBar() {
   return (
     <header className="sticky top-0 z-10 border-b border-[var(--border)] bg-[var(--background)]/80 backdrop-blur">
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-3">
-        <Link href="/" className="shrink-0 text-base font-semibold">
+        <Link href="/" className="font-heading shrink-0 text-lg font-bold text-[var(--accent)]">
           나의 하루
         </Link>
         <nav className="flex items-center gap-1 overflow-x-auto">

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import AuthBackdrop from "@/components/AuthBackdrop";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -48,9 +49,10 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
+      <AuthBackdrop />
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold">나의 하루</h1>
+          <h1 className="font-heading text-3xl font-bold">나의 하루</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">계정을 만들어 시작해보세요</p>
         </div>
 

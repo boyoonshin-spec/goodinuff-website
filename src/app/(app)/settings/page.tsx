@@ -46,7 +46,7 @@ function SettingsContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">설정</h1>
+        <h1 className="font-heading text-2xl font-bold">설정</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">계정과 알림을 관리해요.</p>
       </div>
 

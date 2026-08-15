@@ -98,7 +98,7 @@ export default function ScheduleItemRow({
             </span>
           )}
           {item.remindKakao && (
-            <span className="rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] font-medium text-[var(--accent)]">
+            <span className="badge-kakao">
               카톡 {item.remindMinutesBefore}분 전
             </span>
           )}

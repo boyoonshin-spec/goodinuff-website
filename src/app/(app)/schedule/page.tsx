@@ -41,7 +41,7 @@ export default function SchedulePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">일정 관리</h1>
+        <h1 className="font-heading text-2xl font-bold">일정 관리</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
           하루의 일정과 할일을 함께 계획해보세요.
         </p>
@@ -59,7 +59,7 @@ export default function SchedulePage() {
           <span className="text-sm font-medium">
             {formatDateLabel(date)}
             {isToday(date) && (
-              <span className="ml-1.5 rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] font-medium text-[var(--accent)]">
+              <span className="badge-today ml-1.5">
                 오늘
               </span>
             )}

@@ -56,7 +56,7 @@ export default function DiaryPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">일기</h1>
+        <h1 className="font-heading text-2xl font-bold">일기</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
           타자로 적거나, 마이크 버튼을 눌러 말로 기록해보세요.
         </p>
@@ -74,7 +74,7 @@ export default function DiaryPage() {
           <span className="text-sm font-medium">
             {formatDateLabel(date)}
             {isToday(date) && (
-              <span className="ml-1.5 rounded-full bg-[var(--accent-soft)] px-2 py-0.5 text-[10px] font-medium text-[var(--accent)]">
+              <span className="badge-today ml-1.5">
                 오늘
               </span>
             )}

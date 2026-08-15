@@ -4,6 +4,7 @@ import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import AuthBackdrop from "@/components/AuthBackdrop";
 
 function LoginForm() {
   const router = useRouter();
@@ -35,9 +36,10 @@ function LoginForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
+      <AuthBackdrop />
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="text-2xl font-semibold">나의 하루</h1>
+          <h1 className="font-heading text-3xl font-bold">나의 하루</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
             일정 · 할일 · 일기를 한 곳에서
           </p>

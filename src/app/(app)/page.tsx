@@ -47,7 +47,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">
+        <h1 className="font-heading text-2xl font-bold">
           안녕하세요{session?.user?.name ? `, ${session.user.name}님` : ""} 👋
         </h1>
         <p className="mt-1 text-sm text-[var(--muted)]">{formatDateLabel(today)}</p>

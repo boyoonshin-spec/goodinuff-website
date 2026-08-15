@@ -71,7 +71,7 @@ export default function TodoPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-semibold">할일</h1>
+        <h1 className="font-heading text-2xl font-bold">할일</h1>
         <p className="mt-1 text-sm text-[var(--muted)]">
           날짜에 관계없이 모아보는 할일 목록이에요.
         </p>
