@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Noto_Serif_KR } from "next/font/google";
 import Providers from "@/components/Providers";
 import "./globals.css";
@@ -21,6 +21,15 @@ const notoSerifKr = Noto_Serif_KR({
 export const metadata: Metadata = {
   title: "나의 하루 | 일정·할일·일기",
   description: "일정 관리, 할일, 일기를 한 곳에서. 타자와 음성으로 기록하고 카카오톡으로 알림받기.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "나의 하루",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#db2777",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
