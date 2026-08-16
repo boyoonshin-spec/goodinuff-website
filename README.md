@@ -14,7 +14,7 @@
 
 ## 기술 스택
 
-Next.js (App Router) · TypeScript · Tailwind CSS · Prisma + SQLite · NextAuth (Credentials)
+Next.js (App Router) · TypeScript · Tailwind CSS · Prisma (SQLite/Turso via libSQL) · NextAuth (Credentials)
 
 ## 시작하기
 
@@ -31,7 +31,8 @@ npm run dev
 
 | 변수 | 설명 |
 | --- | --- |
-| `DATABASE_URL` | SQLite 파일 경로 (기본값 그대로 사용 가능) |
+| `DATABASE_URL` | 로컬 개발은 SQLite 파일 경로(기본값 그대로 사용). 배포 시엔 Turso 주소(`libsql://...`)로 교체 |
+| `DATABASE_AUTH_TOKEN` | Turso 사용 시 필요한 인증 토큰 (로컬 개발은 비워둬도 됨) |
 | `AUTH_SECRET` | 로그인 세션 암호화 키. `openssl rand -base64 32` 로 생성 |
 | `KAKAO_REST_API_KEY` | 카카오 개발자 콘솔의 REST API 키 |
 | `KAKAO_CLIENT_SECRET` | (선택) 카카오 로그인 보안 강화 설정 시 필요 |
@@ -57,17 +58,44 @@ npm run dev
 curl -H "Authorization: Bearer $CRON_SECRET" https://your-domain.com/api/cron/send-reminders
 ```
 
-Vercel을 사용한다면 `vercel.json`에 아래처럼 등록할 수 있습니다.
+이 저장소에는 이미 `vercel.json`이 있어서, Vercel에 배포하면 5분마다 자동 호출됩니다.
+Vercel은 `CRON_SECRET` 환경변수가 설정되어 있으면 자체 Cron 요청에 자동으로
+`Authorization: Bearer $CRON_SECRET` 헤더를 붙여서 보내주므로 별도 설정이 필요 없습니다.
 
-```json
-{
-  "crons": [
-    { "path": "/api/cron/send-reminders", "schedule": "*/5 * * * *" }
-  ]
-}
+## 배포하기 (Vercel + Turso)
+
+로컬 SQLite 파일은 서버리스 환경(Vercel)에서 요청마다 초기화될 수 있어 데이터가
+유지되지 않습니다. 그래서 배포 시에는 SQLite와 호환되는 무료 클라우드 DB인
+[Turso](https://turso.tech)를 사용합니다.
+
+### 1. Turso 데이터베이스 만들기
+
+1. [turso.tech](https://turso.tech) 에서 무료 계정 생성 (GitHub 계정으로 가능)
+2. 대시보드에서 새 데이터베이스 생성
+3. 생성된 DB의 **연결 주소**(`libsql://xxx.turso.io`)와 **Auth Token**을 발급받아 각각
+   `DATABASE_URL`, `DATABASE_AUTH_TOKEN`으로 사용
+
+### 2. 마이그레이션 적용
+
+로컬에서 아래처럼 Turso DB에 스키마를 적용합니다 (최초 1회 + 스키마 변경 시마다).
+
+```bash
+DATABASE_URL="libsql://xxx.turso.io" DATABASE_AUTH_TOKEN="..." npx prisma migrate deploy
 ```
-(Vercel Cron은 요청 시 자동으로 인증 헤더를 보내지 않으므로, 라우트를 살짝 바꾸거나
-외부 cron 서비스를 함께 쓰는 것이 더 간단할 수 있습니다.)
+
+### 3. Vercel에 배포
+
+1. [vercel.com](https://vercel.com) 에서 무료 계정 생성 (GitHub 계정으로 가능)
+2. "Add New → Project"에서 이 GitHub 저장소를 선택해 Import
+3. 프로젝트 **Settings → Environment Variables**에 아래 값을 모두 등록:
+   - `DATABASE_URL`, `DATABASE_AUTH_TOKEN` (Turso 값)
+   - `AUTH_SECRET`
+   - `KAKAO_REST_API_KEY`, `KAKAO_CLIENT_SECRET`(있다면), `KAKAO_REDIRECT_URI`
+   - `NEXT_PUBLIC_APP_URL` — 배포되면 나오는 `https://xxx.vercel.app` 주소로 설정
+   - `CRON_SECRET`
+4. 배포가 끝나면, **카카오 개발자 콘솔 → 앱 → 플랫폼 키 → REST API 키 수정**에서
+   `KAKAO_REDIRECT_URI`(`https://xxx.vercel.app/api/kakao/callback`)를 로그인
+   리다이렉트 URI로 추가 등록 (기존 `localhost` 항목은 남겨둬도 됩니다)
 
 ## 음성 입력에 대해
 
