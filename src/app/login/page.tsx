@@ -2,6 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import AuthBackdrop from "@/components/AuthBackdrop";
@@ -39,7 +40,14 @@ function LoginForm() {
       <AuthBackdrop />
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
-          <h1 className="font-heading text-3xl font-bold">나의 하루</h1>
+          <Image
+            src="/avatar.png"
+            alt=""
+            width={72}
+            height={72}
+            className="mx-auto rounded-full border-2 border-[var(--surface)] shadow-sm"
+          />
+          <h1 className="font-heading mt-3 text-3xl font-bold">나의 하루</h1>
           <p className="mt-1 text-sm text-[var(--muted)]">
             일정 · 할일 · 일기를 한 곳에서
           </p>
