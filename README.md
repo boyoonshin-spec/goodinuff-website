@@ -75,15 +75,12 @@ Vercel은 `CRON_SECRET` 환경변수가 설정되어 있으면 자체 Cron 요�
 3. 생성된 DB의 **연결 주소**(`libsql://xxx.turso.io`)와 **Auth Token**을 발급받아 각각
    `DATABASE_URL`, `DATABASE_AUTH_TOKEN`으로 사용
 
-### 2. 마이그레이션 적용
+> `prisma migrate deploy`는 `libsql://` 연결 문자열을 지원하지 않습니다 (Prisma CLI
+> 자체 한계). 그래서 테이블 생성은 3단계처럼 앱에 내장된 `/api/admin/init-db`
+> 라우트로 처리합니다 — 로컬 SQLite로 스키마를 바꿀 땐 지금처럼
+> `npx prisma migrate dev`를 그대로 쓰면 되고, Turso 쪽 테이블만 이 라우트가 담당합니다.
 
-로컬에서 아래처럼 Turso DB에 스키마를 적용합니다 (최초 1회 + 스키마 변경 시마다).
-
-```bash
-DATABASE_URL="libsql://xxx.turso.io" DATABASE_AUTH_TOKEN="..." npx prisma migrate deploy
-```
-
-### 3. Vercel에 배포
+### 2. Vercel에 배포
 
 1. [vercel.com](https://vercel.com) 에서 무료 계정 생성 (GitHub 계정으로 가능)
 2. "Add New → Project"에서 이 GitHub 저장소를 선택해 Import
@@ -96,6 +93,15 @@ DATABASE_URL="libsql://xxx.turso.io" DATABASE_AUTH_TOKEN="..." npx prisma migrat
 4. 배포가 끝나면, **카카오 개발자 콘솔 → 앱 → 플랫폼 키 → REST API 키 수정**에서
    `KAKAO_REDIRECT_URI`(`https://xxx.vercel.app/api/kakao/callback`)를 로그인
    리다이렉트 URI로 추가 등록 (기존 `localhost` 항목은 남겨둬도 됩니다)
+
+### 3. Turso에 테이블 생성 (최초 1회)
+
+배포가 끝나고 환경변수가 반영된 뒤, 아래처럼 한 번 호출하면 Turso DB에 테이블이
+생성됩니다 (이미 있으면 건드리지 않으므로 다시 호출해도 안전합니다).
+
+```bash
+curl -X POST -H "Authorization: Bearer $CRON_SECRET" https://xxx.vercel.app/api/admin/init-db
+```
 
 ## 음성 입력에 대해
 
