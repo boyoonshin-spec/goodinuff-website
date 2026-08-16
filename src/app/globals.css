@@ -1,0 +1,130 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fff8f5;
+  --surface: #ffffff;
+  --foreground: #2b2321;
+  --muted: #8b7d79;
+  --border: #f1e1e0;
+
+  /* azalea */
+  --accent: #db2777;
+  --accent-foreground: #ffffff;
+  --accent-soft: #fce4ec;
+
+  /* buttercup */
+  --accent2: #e8a93d;
+  --accent2-soft: #fcedcb;
+  --accent2-foreground: #6b4a12;
+
+  /* tropical teal */
+  --teal: #0f7a8c;
+  --teal-soft: #dff3f6;
+  --teal-foreground: #ffffff;
+
+  --danger: #e2574c;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent2: var(--accent2);
+  --color-accent2-soft: var(--accent2-soft);
+  --color-teal: var(--teal);
+  --color-teal-soft: var(--teal-soft);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #241a1d;
+    --surface: #2e2226;
+    --foreground: #f8eeec;
+    --muted: #b79d98;
+    --border: #422f30;
+
+    --accent: #f4739b;
+    --accent-foreground: #241a1d;
+    --accent-soft: #4a2733;
+
+    --accent2: #f0b94e;
+    --accent2-soft: #4a3620;
+    --accent2-foreground: #fce9c4;
+
+    --teal: #4fc5da;
+    --teal-soft: #1b3a40;
+    --teal-foreground: #16262a;
+
+    --danger: #ff7a6e;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+.font-heading {
+  font-family: var(--font-heading), var(--font-sans), serif;
+}
+
+@layer components {
+  .card {
+    @apply rounded-3xl border border-[var(--border)] bg-[var(--surface)] shadow-sm;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .btn-ghost,
+  .btn-danger {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-primary {
+    @apply bg-[var(--accent)] text-[var(--accent-foreground)] hover:opacity-90;
+  }
+
+  .btn-secondary {
+    @apply bg-[var(--accent-soft)] text-[var(--accent)] hover:opacity-80;
+  }
+
+  .btn-ghost {
+    @apply text-[var(--muted)] hover:bg-[var(--accent-soft)] hover:text-[var(--accent)];
+  }
+
+  .btn-danger {
+    @apply text-[var(--danger)] hover:bg-[var(--danger)]/10;
+  }
+
+  .field {
+    @apply w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-3.5 py-2.5 text-sm outline-none transition-colors focus:border-[var(--accent)];
+  }
+
+  .label {
+    @apply text-xs font-medium text-[var(--muted)];
+  }
+
+  .badge-today,
+  .badge-kakao {
+    @apply rounded-full px-2 py-0.5 text-[10px] font-semibold;
+  }
+
+  .badge-today {
+    @apply bg-[var(--accent2-soft)] text-[var(--accent2-foreground)];
+  }
+
+  .badge-kakao {
+    @apply bg-[var(--teal-soft)] text-[var(--teal)];
+  }
+}
