@@ -54,12 +54,7 @@ const STATEMENTS = [
   `CREATE UNIQUE INDEX IF NOT EXISTS "KakaoAccount_userId_key" ON "KakaoAccount"("userId")`,
 ];
 
-export async function POST(req: Request) {
-  const auth = req.headers.get("authorization");
-  if (!process.env.CRON_SECRET || auth !== `Bearer ${process.env.CRON_SECRET}`) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
-
+async function runMigration() {
   const client = createClient({
     url: process.env.DATABASE_URL!,
     authToken: process.env.DATABASE_AUTH_TOKEN,
@@ -80,5 +75,26 @@ export async function POST(req: Request) {
   }
   client.close();
 
-  return NextResponse.json({ results });
+  return results;
+}
+
+export async function POST(req: Request) {
+  const auth = req.headers.get("authorization");
+  if (!process.env.CRON_SECRET || auth !== `Bearer ${process.env.CRON_SECRET}`) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json({ results: await runMigration() });
+}
+
+// Lets the setup secret be triggered by just visiting the URL (with ?secret=)
+// from a phone browser, no terminal needed.
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const secret = searchParams.get("secret");
+  if (!process.env.CRON_SECRET || secret !== process.env.CRON_SECRET) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
+  return NextResponse.json({ results: await runMigration() });
 }
