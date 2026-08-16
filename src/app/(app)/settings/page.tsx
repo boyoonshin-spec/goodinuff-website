@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 function SettingsContent() {
-  const { data: session } = useSession();
+  const { data: session, update } = useSession();
   const searchParams = useSearchParams();
   const kakaoParam = searchParams.get("kakao");
 
@@ -13,6 +13,29 @@ function SettingsContent() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [testSending, setTestSending] = useState(false);
+
+  const [editingName, setEditingName] = useState(false);
+  const [name, setName] = useState("");
+  const [savingName, setSavingName] = useState(false);
+
+  useEffect(() => {
+    setName(session?.user?.name ?? "");
+  }, [session?.user?.name]);
+
+  async function handleSaveName() {
+    if (!name.trim()) return;
+    setSavingName(true);
+    const res = await fetch("/api/account", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim() }),
+    });
+    setSavingName(false);
+    if (res.ok) {
+      await update({ name: name.trim() });
+      setEditingName(false);
+    }
+  }
 
   function loadStatus() {
     setLoading(true);
@@ -53,6 +76,47 @@ function SettingsContent() {
       <section className="card space-y-3 p-4">
         <h2 className="text-sm font-semibold">계정</h2>
         <p className="text-sm text-[var(--muted)]">{session?.user?.email}</p>
+
+        <div>
+          <span className="label">이름</span>
+          {editingName ? (
+            <div className="mt-1.5 flex gap-2">
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="field"
+                autoFocus
+              />
+              <button
+                onClick={handleSaveName}
+                disabled={savingName || !name.trim()}
+                className="btn-primary shrink-0"
+              >
+                저장
+              </button>
+              <button
+                onClick={() => {
+                  setEditingName(false);
+                  setName(session?.user?.name ?? "");
+                }}
+                className="btn-ghost shrink-0"
+              >
+                취소
+              </button>
+            </div>
+          ) : (
+            <div className="mt-1.5 flex items-center gap-2">
+              <span className="text-sm">{session?.user?.name || "이름 없음"}</span>
+              <button
+                onClick={() => setEditingName(true)}
+                className="text-xs font-medium text-[var(--accent)]"
+              >
+                수정
+              </button>
+            </div>
+          )}
+        </div>
       </section>
 
       <section className="card space-y-3 p-4">
