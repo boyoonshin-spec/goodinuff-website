@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import ScheduleItemRow from "@/components/schedule/ScheduleItemRow";
@@ -46,11 +47,20 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-heading text-2xl font-bold">
-          안녕하세요{session?.user?.name ? `, ${session.user.name}님` : ""} 👋
-        </h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">{formatDateLabel(today)}</p>
+      <div className="flex items-center gap-3">
+        <Image
+          src="/avatar.png"
+          alt=""
+          width={56}
+          height={56}
+          className="shrink-0 rounded-full border-2 border-[var(--surface)] shadow-sm"
+        />
+        <div>
+          <h1 className="font-heading text-2xl font-bold">
+            안녕하세요{session?.user?.name ? `, ${session.user.name}님` : ""} 👋
+          </h1>
+          <p className="mt-1 text-sm text-[var(--muted)]">{formatDateLabel(today)}</p>
+        </div>
       </div>
 
       {!kakaoConnected && (
